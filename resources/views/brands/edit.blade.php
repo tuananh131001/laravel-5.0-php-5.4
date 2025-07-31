@@ -1,0 +1,1 @@
+@extends('brands.form')

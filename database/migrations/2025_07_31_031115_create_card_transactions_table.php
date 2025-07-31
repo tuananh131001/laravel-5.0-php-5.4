@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUsersTable extends Migration {
+class CreateCardTransactionsTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,15 +12,20 @@ class CreateUsersTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('users', function(Blueprint $table)
+		Schema::create('card_transactions', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->string('name');
-			$table->string('email')->unique();
-			$table->string('password', 60);
-			$table->rememberToken();
+			$table->unsignedInteger('card_id');
+			$table->decimal('amount', 10, 2);
+			$table->string('currency', 3);
+			$table->string('description')->nullable();
 			$table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
 			$table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
+			
+			$table->foreign('card_id')
+				->references('id')
+				->on('cards')
+				->onDelete('cascade');
 		});
 	}
 
@@ -31,7 +36,7 @@ class CreateUsersTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('users');
+		Schema::drop('card_transactions');
 	}
 
 }
