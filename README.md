@@ -1,5 +1,8 @@
 # Laravel 5.0 for Laravel Shift
 
+![Test Coverage](https://github.com/your-username/your-repo/workflows/Test%20Coverage/badge.svg)
+[![codecov](https://codecov.io/gh/your-username/your-repo/branch/main/graph/badge.svg)](https://codecov.io/gh/your-username/your-repo)
+
 This repository contains the latest version of Laravel 5.0. It is used as a reference by [Laravel Shift - the automated way to upgrade Laravel applications](https://laravelshift.com).
 
 ## About Shift
