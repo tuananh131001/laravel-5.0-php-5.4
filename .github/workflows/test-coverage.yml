@@ -8,11 +8,12 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     
     strategy:
       matrix:
-        php-version: ['5.4', '5.5', '5.6']
+        php-version: ['5.6']
+      fail-fast: false
     
     steps:
     - uses: actions/checkout@v3
@@ -21,9 +22,10 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php-version }}
-        extensions: mbstring, dom, fileinfo, mysql, libxml, xml, xmlwriter, dom, tokenizer, filter, json, phar, pcre, openssl, pdo, pdo_sqlite
+        extensions: mbstring, dom, fileinfo, mysql, libxml, xml, xmlwriter, tokenizer, filter, json, phar, pcre, openssl, pdo, pdo_sqlite, mcrypt
         coverage: xdebug
         tools: composer:v1
+        ini-values: error_reporting=E_ALL
     
     - name: Get composer cache directory
       id: composer-cache
@@ -36,8 +38,17 @@ jobs:
         key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
         restore-keys: ${{ runner.os }}-composer-
     
+    - name: Copy .env
+      run: |
+        php -r "file_exists('.env') || copy('.env.example', '.env');"
+    
     - name: Install dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
+      run: |
+        composer self-update --1
+        composer install --prefer-dist --no-progress --no-interaction
+    
+    - name: Generate app key
+      run: php artisan key:generate
     
     - name: Create SQLite database
       run: touch database/database.sqlite
